@@ -13,6 +13,8 @@ Pod::Spec.new do |s|
   s.summary          = "A collection of classes and categories to extend foundation and UIKit frameworks with Bolts."
   s.description      = <<-DESC
                        A collection of classes and categories to extend foundation and UIKit frameworks with Bolts.
+                       
+                       The current version of this library is a bit bare-bones, but contains categories on UIImage and NSData to put some potentially expensive operations on a background queue and return a BFTask to handle the result.
 
                        * Markdown format.
                        * Don't worry about the indent, we strip it!
