@@ -7,21 +7,27 @@
 //
 
 #import "NSData+BoltsHelpers.h"
+#import "NSError+BoltsHelpers.h"
 
 @implementation NSData (BoltsHelpers)
 
 - (BFTask *)bh_writeToURL: (NSURL *) url options: (NSDataWritingOptions) writeOptionsMask {
     BFTaskCompletionSource * taskCompletionSource = [BFTaskCompletionSource taskCompletionSource];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        NSError * error;
-        BOOL result = [self writeToURL:url options:writeOptionsMask error:&error];
-        if (result) {
-            [taskCompletionSource setResult:@(result)];
-        }
-        else {
-            [taskCompletionSource setError:error];
-        }
-    });
+    if ([url isFileURL]) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            NSError * error;
+            BOOL result = [self writeToURL:url options:writeOptionsMask error:&error];
+            if (result) {
+                [taskCompletionSource setResult:@(result)];
+            }
+            else {
+                [taskCompletionSource setError:error];
+            }
+        });
+    }
+    else {
+        [taskCompletionSource setError:[NSError bh_errorWithCode:BHResultInvalidParameter description:@"invalid parameter: url is not a file URL"]];
+    }
     return taskCompletionSource.task;
 }
 
