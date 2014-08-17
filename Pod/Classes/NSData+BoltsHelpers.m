@@ -33,16 +33,21 @@
 
 + (BFTask *)bh_dataWithContentsOfURL:(NSURL *)url options: (NSDataReadingOptions) readOptionsMask {
     BFTaskCompletionSource * taskCompletionSource = [BFTaskCompletionSource taskCompletionSource];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        NSError * error;
-        NSData * result = [NSData dataWithContentsOfURL:url options:readOptionsMask error:&error];
-        if (result) {
-            [taskCompletionSource setResult:result];
-        }
-        else {
-            [taskCompletionSource setError:error];
-        }
-    });
+    if (url) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            NSError * error;
+            NSData * result = [NSData dataWithContentsOfURL:url options:readOptionsMask error:&error];
+            if (result) {
+                [taskCompletionSource setResult:result];
+            }
+            else {
+                [taskCompletionSource setError:error];
+            }
+        });
+    }
+    else {
+        [taskCompletionSource setError:[NSError bh_errorWithCode:BHResultInvalidParameter description:@"invalid parameter: url must not be nil"]];
+    }
     return taskCompletionSource.task;
 }
 
