@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "BoltsHelpers"
-  s.version          = "0.1.0"
+  s.version          = "0.1.1"
   s.summary          = "A collection of classes and categories to extend foundation and UIKit frameworks with Bolts."
   s.description      = <<-DESC
                        A collection of classes and categories to extend foundation and UIKit frameworks with Bolts.
